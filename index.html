@@ -161,16 +161,15 @@
           }, [user]);
 
           const handleMainLogin = () => {
-            if (toEnglishNumber(pinInput) === toEnglishNumber(pins.main)) {
-              if (videoRef.current) {
-                  videoRef.current.currentTime = 0;
-                  videoRef.current.play().catch(e => console.log("Video error:", e));
-              }
-              
-              setAuthStatus('video');
-              setPinInput('');
-
+            if (toEnglishNumber(pinInput) ===
+              toEnglishNumber(pins.main)) {
+                  setShowSplash(true);
+                  setPinInput('');
               setTimeout(() => {
+              setShowSplash(false);
+              setAuthStatus('unlocked');
+              setCurrentView('dashboard');
+              }, 10000);
                 setAuthStatus('unlocked');
                 setCurrentView('dashboard');
                 if (videoRef.current) {
@@ -178,9 +177,10 @@
                 }
               }, 10000);
             } else {
-              setActionPinModal({ show: true, action: null, title: 'ভুল পিন দিয়েছেন' });
-            }
-          };
+              setActionPinModal({ show: true, action: null, title: 
+            'ভুল পিন দিয়েছেন' });
+          }
+         };
 
           const verifyActionAndExecute = () => {
             if (toEnglishNumber(actionPinInput) === toEnglishNumber(pins.action)) {
@@ -338,6 +338,16 @@
           const sortedMembers = [...members].sort((a, b) => (relPriority[a.relation] || 99) - (relPriority[b.relation] || 99));
 
           if (isInitializing) return <div className="min-h-screen bg-[#0f172a] flex items-center justify-center text-white">লোড হচ্ছে...</div>;
+          if (showSplash) {
+return (
+<video 
+src="/splash_video.mp4" 
+autoPlay 
+playsInline 
+className="w-full h-screen object-cover bg-black fixed inset-0 z-[100]" 
+/>
+);
+}
 
           const renderDashboardCards = () => (
             <div className="grid grid-cols-2 gap-4">
