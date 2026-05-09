@@ -81,6 +81,7 @@
           const videoRef = useRef(null);
           const [user, setUser] = useState(null);
           const [isInitializing, setIsInitializing] = useState(true);
+          const [showSplash, setShowSplash] = useState(false);
 
           const [authStatus, setAuthStatus] = useState('locked'); 
           const [pinInput, setPinInput] = useState('');
@@ -161,26 +162,18 @@
           }, [user]);
 
           const handleMainLogin = () => {
-            if (toEnglishNumber(pinInput) ===
-              toEnglishNumber(pins.main)) {
-                  setShowSplash(true);
-                  setPinInput('');
+            if (toEnglishNumber(pinInput) === toEnglishNumber(pins.main)) {
+              setShowSplash(true);
+              setPinInput('');
               setTimeout(() => {
-              setShowSplash(false);
-              setAuthStatus('unlocked');
-              setCurrentView('dashboard');
-              }, 10000);
+                setShowSplash(false);
                 setAuthStatus('unlocked');
                 setCurrentView('dashboard');
-                if (videoRef.current) {
-                    videoRef.current.pause();
-                }
               }, 10000);
             } else {
-              setActionPinModal({ show: true, action: null, title: 
-            'ভুল পিন দিয়েছেন' });
-          }
-         };
+              setActionPinModal({ show: true, action: null, title: 'ভুল পিন দিয়েছেন' });
+            }
+          };
 
           const verifyActionAndExecute = () => {
             if (toEnglishNumber(actionPinInput) === toEnglishNumber(pins.action)) {
@@ -338,16 +331,17 @@
           const sortedMembers = [...members].sort((a, b) => (relPriority[a.relation] || 99) - (relPriority[b.relation] || 99));
 
           if (isInitializing) return <div className="min-h-screen bg-[#0f172a] flex items-center justify-center text-white">লোড হচ্ছে...</div>;
+          
           if (showSplash) {
-return (
-<video 
-src="/splash_video.mp4" 
-autoPlay 
-playsInline 
-className="w-full h-screen object-cover bg-black fixed inset-0 z-[100]" 
-/>
-);
-}
+            return (
+              <video 
+                src=".public/splash_video.mp4" 
+                autoPlay 
+                playsInline 
+                className="w-full h-screen object-cover bg-black fixed inset-0 z-[100]" 
+              />
+            );
+          }
 
           const renderDashboardCards = () => (
             <div className="grid grid-cols-2 gap-4">
@@ -589,18 +583,6 @@ className="w-full h-screen object-cover bg-black fixed inset-0 z-[100]"
                   <div className="absolute inset-0 bg-slate-900/70 backdrop-blur-sm"></div>
               </div>
 
-              {authStatus === 'video' && (
-                <div className="fixed inset-0 z-[100] bg-black flex items-center justify-center overflow-hidden transition-opacity duration-1000">
-                    <video
-                        ref={videoRef}
-                        src="./public/splash_video.mp4"
-                        playsInline
-                        autoPlay
-                        className="w-full h-full object-cover opacity-100"
-                    />
-                </div>
-              )}
-
               {authStatus === 'locked' && (
                 <div className="min-h-screen flex items-center justify-center p-4 relative z-10">
                   <div className="w-full max-w-sm flex flex-col items-center bg-white/5 backdrop-blur-xl border border-white/10 p-8 rounded-[2.5rem] shadow-2xl">
@@ -713,7 +695,7 @@ className="w-full h-screen object-cover bg-black fixed inset-0 z-[100]"
                     <div className="flex gap-3 pt-4">
                       <button type="button" onClick={() => setActiveModal(null)} className="flex-1 py-4 bg-white/10 hover:bg-white/20 border border-white/10 rounded-xl text-white transition-all">বাতিল</button>
                       <button type="submit" disabled={isSaving} className="flex-1 py-4 bg-cyan-600/80 hover:bg-cyan-600 border border-cyan-500/50 rounded-xl text-white shadow-lg transition-all disabled:opacity-50">
-                        {isSaving ? 'সংরক্ষণ হচ্ছে...' : 'সংরক্ষণ করুন'}
+                        {isSaving ? 'সং সংরক্ষণ হচ্ছে...' : 'সংরক্ষণ করুন'}
                       </button>
                     </div>
                   </form>
@@ -812,7 +794,7 @@ className="w-full h-screen object-cover bg-black fixed inset-0 z-[100]"
                           <select name="type" defaultValue={editingItem?.type || 'bank'} className="glass-input w-full rounded-xl p-4 shadow-inner [&>option]:bg-slate-800">
                             <option value="cash">ক্যাশ (নগদ টাকা)</option>
                             <option value="bank">ব্যাংক</option>
-                            <option value="bkash">বিকাশ/নগদ</option>
+                            <option value="bkash">বিকাশ/ন নগদ</option>
                           </select>
                           <input name="balance" type="text" inputMode="numeric" defaultValue={editingItem?.balance || 0} placeholder="প্রারম্ভিক ব্যালেন্স (অ্যাকাউন্ট খোলার সময়ের ব্যালেন্স)" required className="glass-input w-full rounded-xl p-4 shadow-inner" />
                         </>
